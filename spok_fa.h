@@ -61,3 +61,4 @@ const struct State Q56;
 const struct State Q57;
 const struct State Q58;
 const struct State Q59;
+const struct State Q60;
