@@ -434,7 +434,6 @@ bool pda(char* grammar) {
     }
   } else if(last == 'P') {
     pop(grammarCpy);
-    printf("\n%s\n", grammarCpy);
     last = grammarCpy[strlen(grammarCpy) - 1];
     if(last == 'S') {
       pop(grammarCpy);
