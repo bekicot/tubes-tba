@@ -1,9 +1,20 @@
 #include "stdio.h"
 #include "string.h"
-#include "./spok_fa.h"
+#include <ctype.h>
 #include "stdbool.h"
+#include "./spok_fa.h"
 
-bool parser(char* input);
+bool faSubject(char* input);
+bool faPredicate(char* input);
+bool faObject(char* input);
+bool faKeterangan(char* input);
+bool fa(char* input, struct State initialState);
+bool pdaSPOK(char* stacks);
+void pop(char* stacks);
+void push(char* stacks, char topChar);
+void pdaGagal(char* grammar);
+bool pda(char* grammar);
+
 struct StateMap {
   char input;
   const struct State *state;
@@ -14,7 +25,7 @@ struct State {
   bool is_final;
 };
 
-const struct State Q0 = {
+const struct State SUBJECT = {
   .nextStates = {
     { .input='S', .state=&Q1 },
     { .input='K', .state=&Q5 },
@@ -44,9 +55,7 @@ const struct State Q3  = {
   },
 };
 const struct State Q4  = {
-  .nextStates = {
-    { .input=' ', .state=&Q15 },
-  }
+  .is_final=true
 };
 const struct State Q5  = {
   .nextStates = {
@@ -65,14 +74,10 @@ const struct State Q7  = {
   }
 };
 const struct State Q8  = {
-  .nextStates = {
-    { .input=' ', .state=&Q15 }
-  }
+  .is_final=true
 };
 const struct State Q9  = {
-  .nextStates = {
-    { .input=' ', .state=&Q15 }
-  }
+  .is_final=true
 };
 const struct State Q10  = {
   .nextStates = {
@@ -91,20 +96,17 @@ const struct State Q12  = {
   }
 };
 const struct State Q13  = {
-  .nextStates = {
-    { .input=' ', .state=&Q15 }
-  }
+  .is_final=true
 };
 const struct State Q14  = {
-  .nextStates = {
-    { .input=' ', .state=&Q15 }
-  }
+  .is_final=true
 };
-const struct State Q15  = {
+
+// Predikat
+const struct State PREDICATE  = {
   .nextStates = {
     { .input='M', .state=&Q16 }
   }
-  //.is_final = true
 };
 const struct State Q16  = {
   .nextStates = {
@@ -181,16 +183,14 @@ const struct State Q29  = {
   }
 };
 const struct State Q30  = {
-  .nextStates = {
-    { .input=' ', .state=&Q31 }
-  },
   .is_final = true
 };
-const struct State Q31  = {
+
+// OBJECT
+const struct State OBJECT  = {
   .nextStates = {
     { .input='A', .state=&Q32 },
     { .input='B', .state=&Q37 },
-    { .input='D', .state=&Q41 }
   }
 };
 const struct State Q32  = {
@@ -237,22 +237,15 @@ const struct State Q39  = {
   }
 };
 const struct State Q40  = {
-  .nextStates = {
-    { .input=' ', .state=&Q60 }
-  },
   .is_final = true
 };
 
 const struct State Q41  = {
   .nextStates = {
-    { .input='I', .state=&Q42 }
+    { .input='I', .state=&Q43 }
   }
 };
-const struct State Q42  = {
-  .nextStates = {
-    { .input=' ', .state=&Q43 }
-  }
-};
+
 const struct State Q43  = {
   .nextStates = {
     { .input='K', .state=&Q44 },
@@ -340,33 +333,23 @@ const struct State Q58  = {
 const struct State Q59  = {
   .is_final = true
 };
-const struct State Q60  = {
+
+// KETERANGAN
+const struct State KETERANGAN  = {
   .nextStates = {
     { .input='D', .state=&Q41 }
   }
 };
 
-
-int main(int argc, char const *argv[])
-{
-  char input[100];
-  printf("INPUT KALIMAT : ");
-  scanf("%[^\n]%*c",input);
-  printf("%i\n", parser(input));
-  // printf("%i\n", parser("SAYA MENCURI BAJA DI RUMPUT"));
-  return 0;
-}
-
-bool parser(char* input) {
+bool fa(char* input, struct State initialState) {
   size_t inputLength = strlen(input);
-  struct State currentState = Q0;
+  struct State currentState = initialState;
   for (int i = 0; i < inputLength; ++i)
   {
     size_t j = 0;
     bool valid = false;
-    while(currentState.nextStates !=NULL && currentState.nextStates[j].state != NULL) {
-      printf("%c\n", currentState.nextStates[j].input);
-      if (input[i] == currentState.nextStates[j].input)
+    while(currentState.nextStates[j].state != NULL) {
+      if (toupper((unsigned char) input[i]) == currentState.nextStates[j].input)
       {
         valid = true;
         currentState = *currentState.nextStates[j].state;
@@ -381,4 +364,128 @@ bool parser(char* input) {
   if(currentState.is_final)
     return true;
   return false;
+}
+
+bool faSubject(char* input) {
+  return fa(input, SUBJECT);
+}
+
+bool faPredicate(char* input) {
+  return fa(input, PREDICATE);
+}
+
+bool faObject(char* input) {
+  return fa(input, OBJECT);
+}
+
+bool faKeterangan(char* input) {
+  return fa(input, KETERANGAN);
+}
+
+bool pdaSPOK(char* stacks) {
+  // int i;
+  // while(true) {
+
+  // }
+  return 0;
+}
+
+void pop(char* stacks) {
+  stacks[strlen(stacks) - 1] = 0;
+}
+
+void push(char* stacks, char topChar) {
+  stacks[strlen(stacks)] =  topChar;
+}
+
+void pdaGagal(char* grammar) {
+  printf("Grammar (%s) salah!", grammar);
+}
+
+bool pda(char* grammar) {
+  char grammarCpy[100];
+  strcpy(grammarCpy, grammar);
+
+  char last = grammarCpy[strlen(grammarCpy) - 1];
+
+  if(last == 'K') {
+    pop(grammarCpy);
+    last = grammarCpy[strlen(grammarCpy) - 1];
+    if(*grammarCpy != 0 && last == 'P') {
+      pop(grammarCpy);
+      last = grammarCpy[strlen(grammarCpy) - 1];
+      if(last == 'S') {
+        pop(grammarCpy);
+        if(*grammarCpy == 0)
+          return true;
+      }
+    } else if (last == 'O') {
+      pop(grammarCpy);
+      last = grammarCpy[strlen(grammarCpy) - 1];
+      if(*grammarCpy != 0 && last == 'P') {
+        pop(grammarCpy);
+        last = grammarCpy[strlen(grammarCpy) - 1];
+        if(last == 'S') {
+          pop(grammarCpy);
+          if(*grammarCpy == 0)
+            return true;
+        }
+      }
+    }
+  } else if(last == 'P') {
+    pop(grammarCpy);
+    printf("\n%s\n", grammarCpy);
+    last = grammarCpy[strlen(grammarCpy) - 1];
+    if(last == 'S') {
+      pop(grammarCpy);
+      if(*grammarCpy == 0)
+        return true;
+    }
+  } else if(last == 'O') {
+    pop(grammarCpy);
+    last = grammarCpy[strlen(grammarCpy) - 1];
+    if(*grammarCpy != 0 && last == 'P') {
+      pop(grammarCpy);
+      last = grammarCpy[strlen(grammarCpy) - 1];
+      if(last == 'S') {
+        pop(grammarCpy);
+        if(*grammarCpy == 0)
+          return true;
+      }
+    }
+  }
+  return false;
+}
+
+int main(int argc, char const *argv[])
+{
+  char input[100];
+  char grammar[100];
+  printf("INPUT KALIMAT : ");
+  scanf("%[^\n]%*c", input);
+
+  char * kata = strtok (input," ,.-");
+  while (kata != NULL)
+  {
+    if(faSubject(kata)) {
+      push(grammar, 'S');
+    } else if(faPredicate(kata)) {
+      push(grammar, 'P');
+    } else if(faObject(kata)) {
+      push(grammar, 'O');
+    } else if(faKeterangan(kata)) {
+      push(grammar, 'K');
+    } else {
+      printf("Kata Tidak Valid (%s). Tidak melanjutkan proses pda\n", kata);
+      return 1;
+    }
+    kata = strtok (NULL, " ,.-");
+  }
+
+
+  printf("%s\n", grammar);
+
+  printf("%i\n", pda(grammar));
+
+  return 0;
 }
