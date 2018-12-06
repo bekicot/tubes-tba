@@ -463,6 +463,7 @@ int main(int argc, char const *argv[])
 {
 
   char input[100];
+  input[99] = '\0';
   char grammar[100];
 
   printValidKata();
