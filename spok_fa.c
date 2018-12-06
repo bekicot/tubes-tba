@@ -451,19 +451,21 @@ bool pda(char* grammar) {
   return false;
 }
 
+void printValidKata() {
+  printf("LIST KATA-KATA YANG DAPAT DIGUNAKAN\n\n");
+  printf("SUBJEK : {KAMI,KAMU,YANA,YANI,SAYA}\n");
+  printf("PREDIKAT : {MENCARI, MENCUCI, MENCURI, MAKAN, MANDI}\n");
+  printf("OBJEK : {AIR, AKI, BAJU, BAJA, APEL}\n");
+  printf("KETERANGAN : {DIRUMAH, DIRUMPUT, DIMEJA, DIPASAR, DIKOS}\n");
+}
+
 int main(int argc, char const *argv[])
 {
 
   char input[100];
   char grammar[100];
 
-  printf("LIST KATA-KATA YANG DAPAT DIGUNAKAN\n\n");
-  printf("SUBJEK : {KAMI,KAMU,YANA,YANI,SAYA}\n");
-  printf("PREDIKAT : {MENCARI, MENCUCI, MENCURI, MAKAN, MANDI}\n");
-  printf("OBJEK : {AIR, AKI, BAJU, BAJA, APEL}\n");
-  printf("KETERANGAN : {DIRUMAH, DIRUMPUT, DIMEJA, DIPASAR, DIKOS}\n");
-  printf("SUBJEK : ");
-
+  printValidKata();
   printf("INPUT KALIMAT : ");
   scanf("%[^\n]%*c", input);
 
@@ -479,14 +481,13 @@ int main(int argc, char const *argv[])
     } else if(faKeterangan(kata)) {
       push(grammar, 'K');
     } else {
-      printf("Kata Tidak Valid (%s). Tidak melanjutkan proses pda\n", kata);
+      printf("Kata Tidak Valid (%s). Tidak melanjutkan proses ke pda.\n", kata);
       return 1;
     }
     kata = strtok (NULL, " ,.-");
   }
 
-
-  printf("%s\n", grammar);
+  printf("Struktur kalimat terdeteksi sebagai (%s)\n", grammar);
 
   printf("%i\n", pda(grammar));
 
