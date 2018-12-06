@@ -469,7 +469,10 @@ int main(int argc, char const *argv[])
   printf("INPUT KALIMAT : ");
   scanf("%[^\n]%*c", input);
 
-  char * kata = strtok (input," ,.-");
+  char temp[100];
+  strcpy(temp, input);
+
+  char * kata = strtok (temp, " ,.-");
   while (kata != NULL)
   {
     if(faSubject(kata)) {
@@ -481,7 +484,7 @@ int main(int argc, char const *argv[])
     } else if(faKeterangan(kata)) {
       push(grammar, 'K');
     } else {
-      printf("Kata Tidak Valid (%s). Tidak melanjutkan proses ke pda.\n", kata);
+      printf("Kata Tidak Valid (%s). Tidak melanjutkan proses ke pda\n", kata);
       return 1;
     }
     kata = strtok (NULL, " ,.-");
@@ -489,7 +492,11 @@ int main(int argc, char const *argv[])
 
   printf("Struktur kalimat terdeteksi sebagai (%s)\n", grammar);
 
-  printf("%i\n", pda(grammar));
+  if(pda(grammar)) {
+    printf("Kalimat \"%s\" valid.\n", input);
+  } else {
+    printf("Kalimat \"%s\" tidak valid\n", input);
+  }
 
   return 0;
 }
