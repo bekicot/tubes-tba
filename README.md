@@ -1,8 +1,14 @@
-# tubes-tba
+# Tubes TBA
 
 Tidak Menerima Customer Support melalu PM atau apalah. Silahkan buka issue melalui https://github.com/bekicot/tubes-tba/issues 
 
 Perangkat lunak ini disediakan apa adanya. Dengan tidak ada jaminan akan jalan di semua platform.
+
+Versi Online
+
+https://www.onlinegdb.com/BkbgL28J4
+
+## License
 
 MIT License
 
