@@ -33,11 +33,6 @@ const struct State SUBJECT = {
   }
 };
 
-const struct State Q = {
-  .nextStates = {
-    { .input='S', .state=&Q1 },
-  }
-};
 
 const struct State Q1 = {
   .nextStates = {
@@ -217,7 +212,7 @@ const struct State Q35  = {
 };
 const struct State Q36  = {
   .nextStates = {
-    { .input='I', .state=&Q40 }
+    { .input='L', .state=&Q40 }
   }
 };
 const struct State Q37  = {
@@ -458,8 +453,17 @@ bool pda(char* grammar) {
 
 int main(int argc, char const *argv[])
 {
+
   char input[100];
   char grammar[100];
+
+  printf("LIST KATA-KATA YANG DAPAT DIGUNAKAN\n\n");
+  printf("SUBJEK : {KAMI,KAMU,YANA,YANI,SAYA}\n");
+  printf("PREDIKAT : {MENCARI, MENCUCI, MENCURI, MAKAN, MANDI}\n");
+  printf("OBJEK : {AIR, AKI, BAJU, BAJA, APEL}\n");
+  printf("KETERANGAN : {DIRUMAH, DIRUMPUT, DIMEJA, DIPASAR, DIKOS}\n");
+  printf("SUBJEK : ");
+
   printf("INPUT KALIMAT : ");
   scanf("%[^\n]%*c", input);
 
